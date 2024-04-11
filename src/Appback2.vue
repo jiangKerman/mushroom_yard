@@ -14,69 +14,20 @@
       transform: translate(-50%,-50%);border-radius: 50%"></Plus>
     </div>
     <!--    <el-button @click="状态.现有总数=状态.现有总数+状态.自己种植.效率">种平菇</el-button>-->
-    <template v-for="(val,key) in 状态.被动收益" :key="key">
-      <div v-if="val.是否展示"  >
+    <template v-for="(val,key) in 状态.被动收益" >
+      <div v-if="val.是否展示" >
         <template v-if="val.是否展示">
-          <div class="被动收益标题">
-            <el-text>{{ key }} ✖ {{ val.现有数 }} &nbsp;&nbsp;{{ val.单个效率 }}平菇/个/秒</el-text>
-            <el-text>共{{ val.总效率 }}/秒</el-text>
-          </div>
-          <div class="被动收益内容">
-            <div style="display: flex;flex-grow: 1">
-              <el-image style="max-height: 100%" fit="scale-down" src="/园丁.png" v-for="i in val.现有数"></el-image>
-            </div>
-            <div
-                style="display: flex;flex-direction: column;justify-content: space-around;margin-right: 1em">
-              <el-icon class="被动收益图标" @click="购买(key,val)">
-                <Plus></Plus>
-              </el-icon>
-              <el-tooltip
-                  :content="`花费${val.单价}: ${val.描述}`"
-                  placement="top"
-              >
-                <el-icon class="被动收益图标">
-                  <QuestionFilled/>
-                </el-icon>
-              </el-tooltip>
-            </div>
+          <div>标题</div>
+          <div style="height: 13vh;background-color: cornsilk">内容
+            <el-image style="height: 100%" v-for="i in val.现有数" src="/园丁.png"></el-image>
+            <el-icon class="被动收益图标" @click="购买(key,val)">
+              <Plus></Plus>
+            </el-icon>
           </div>
         </template>
       </div>
     </template>
 
-    <!--  <el-row>-->
-    <!--    <template v-if="状态.最高总数>=1">-->
-    <!--      <el-tooltip-->
-    <!--          :content="`花费${状态.园丁.单价}个平菇来雇佣园丁为你工作!`"-->
-    <!--          placement="top"-->
-    <!--      >-->
-    <!--        <el-button @click=" 状态.现有总数=状态.现有总数-状态.园丁.单价;-->
-    <!--                            状态.园丁.现有数=状态.园丁.现有数+1;-->
-    <!--                            状态.园丁.单价=状态.园丁.单价+1"-->
-
-    <!--                   :disabled="状态.现有总数<状态.园丁.单价">雇佣园丁-->
-    <!--        </el-button>-->
-    <!--      </el-tooltip>-->
-    <!--      <el-text>园丁: {{ 状态.园丁.现有数 }}个 &nbsp;&nbsp; 总效率: {{ 状态.园丁.总效率 }} 个平菇每秒</el-text>-->
-    <!--    </template>-->
-    <!--  </el-row>-->
-    <!--  <el-row>-->
-    <!--    <template v-if="状态.园丁.现有数>0">-->
-    <!--      <el-tooltip-->
-    <!--          :content="`花费${状态.工业机器人.单价}个平菇来购买工业机器人为你种植!`"-->
-    <!--          placement="top"-->
-    <!--      >-->
-    <!--        <el-button @click=" 状态.现有总数=状态.现有总数-状态.工业机器人.单价;-->
-    <!--                            状态.工业机器人.现有数=状态.工业机器人.现有数+1;-->
-    <!--                            状态.工业机器人.单价=状态.工业机器人.单价+5"-->
-
-    <!--                   :disabled="状态.现有总数<状态.工业机器人.单价">购买工业机器人-->
-    <!--        </el-button>-->
-    <!--      </el-tooltip>-->
-    <!--      <el-text>园丁: {{ 状态.工业机器人.现有数 }}个 &nbsp;&nbsp; 总效率: {{ 状态.工业机器人.总效率 }} 个平菇每秒-->
-    <!--      </el-text>-->
-    <!--    </template>-->
-    <!--  </el-row>-->
     <el-divider></el-divider>
     <el-row>
       <template v-if="状态.被动收益.园丁.现有数>0">
@@ -261,7 +212,7 @@ function 购买(器械名, 器械) {
   display: flex;
   flex-direction: column;
   /*height: 20%;*/
-  height: 6vh
+  /*height: 10vh*/
 }
 
 .被动收益标题 {
@@ -278,7 +229,7 @@ function 购买(器械名, 器械) {
   /*position: relative;*/
   flex-grow: 2;
   background-color: coral;
-  height: 7vh;
+  height: 100%;
 }
 
 .被动收益图标 {
