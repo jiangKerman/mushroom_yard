@@ -1,89 +1,111 @@
 <template>
   <div class="主容器">
     <!--  <el-text>欢迎来到平菇院，种植你的专属平菇</el-text>-->
-    <div class="主页标题容器">
-      <el-text class="字体颜色" size="large">院子里共有 {{ 状态.现有总数.toFixed(1) }} 个平菇</el-text>
-      <el-text class="字体颜色">{{ 状态.总效率.toFixed(1) }} 个/秒</el-text>
+    <!--  标题和平菇图片-->
+    <div>
+      <div class="主页标题容器">
+        <el-text class="字体颜色" size="large">院子里共有 {{ 状态.现有总数.toFixed(1) }} 个平菇</el-text>
+        <el-text class="字体颜色">{{ 状态.总效率.toFixed(1) }} 个/秒</el-text>
+      </div>
+      <div class="主页内容容器" style="position: relative;text-align: center">
+        <el-image
+            style="width:100%;height:100%;position: absolute;left: 0;top: 0;filter: brightness(100%) contrast(100%) grayscale(30%);"
+            src="https://2b.zol-img.com.cn/product/139/269/cedd3aQPoljU.jpg"></el-image>
+        <el-image style="height: 30vh;" src="/平菇.webp"></el-image>
+        <Plus style="width: 3em;background-color: rgba(0,0,0,0.5);
+      color: white;position: absolute;left: 50%;top: 50%;
+      transform: translate(-50%,-50%);border-radius: 50%"
+              @click="状态.现有总数=状态.现有总数+状态.自己种植.效率"></Plus>
+      </div>
     </div>
 
-    <div class="主页内容容器" style="position: relative;text-align: center"
-         @click="状态.现有总数=状态.现有总数+状态.自己种植.效率">
-      <el-image
-          style="width:100%;height:100%;position: absolute;left: 0;top: 0;filter: brightness(100%) contrast(100%) grayscale(30%);"
-          src="https://2b.zol-img.com.cn/product/139/269/cedd3aQPoljU.jpg"></el-image>
-      <el-image style="height: 30vh;" src="/平菇.webp"></el-image>
-      <Plus style="width: 3em;background-color: rgba(0,0,0,0.5);
-      color: white;position: absolute;left: 50%;top: 50%;
-      transform: translate(-50%,-50%);border-radius: 50%"></Plus>
-    </div>
-    <template v-for="(val,key) in 状态.被动收益" :key="key">
-      <div v-if="val.是否展示" :style="`background-image: url(${val.背景}); background-size: cover;`">
-        <template v-if="val.是否展示">
-          <div class="被动收益标题">
-            <el-text class="字体颜色">{{ key }} ✖ {{ val.现有数 }} &nbsp;&nbsp;{{ val.单个效率 }}平菇/个/秒</el-text>
-            <el-text class="字体颜色">共{{ val.总效率.toFixed(1) }}/秒</el-text>
-          </div>
-          <!--          <div class="被动收益内容"  style='background-image: url("/草地.png")'>-->
-          <div class="被动收益内容">
-            <div style="display: flex;flex-grow: 1;flex-shrink: 1;">
-              <el-image style="max-height: 100%;" fit="scale-down" :src="val.立绘" v-for="i in val.现有数"></el-image>
+    <!--    收益器材-->
+    <div style="display: flex;flex-direction: column;flex-grow: 1;overflow-y: auto">
+      <template v-for="(val,key) in 状态.被动收益" :key="key">
+        <div v-if="val.是否展示" :style="`background-image: url(${val.背景}); background-size: cover;`">
+          <template v-if="val.是否展示">
+            <div class="被动收益标题">
+              <el-text class="字体颜色">{{ key }} : {{ val.单个效率 }}平菇/个/秒</el-text>
+              <el-text class="字体颜色">共{{ val.总效率.toFixed(1) }}/秒</el-text>
             </div>
-            <div
-                style="display: flex;flex-direction: column;justify-content: space-around;margin-right: 1em">
-              <el-icon class="被动收益图标" @click="购买(key,val)">
-                <Plus></Plus>
-              </el-icon>
-              <el-tooltip
-                  :content="`花费${val.单价}: ${val.描述}`"
-                  placement="left"
-              >
-                <el-icon class="被动收益图标">
-                  <QuestionFilled/>
+            <div class="被动收益内容">
+              <div style="display: flex;flex-grow: 1;flex-shrink: 1;">
+                <el-image style="max-height: 100%;" fit="scale-down" :src="val.立绘"
+                          v-for="i in Math.min(val.现有数,15)"></el-image>
+              </div>
+              <div v-if="val.现有数>15" style="display: flex;align-items: center">
+                <!--                <el-text>-->
+                <el-icon class="字体颜色">
+                  <CloseBold/>
                 </el-icon>
-              </el-tooltip>
+                <!--                </el-text>-->
+                <el-text class="字体颜色">{{ val.现有数 }}</el-text>
+              </div>
+              <div
+                  style="display: flex;flex-direction: column;justify-content: space-around;margin-right: 1em">
+                <el-icon class="被动收益图标" @click="购买(key,val)">
+                  <Plus></Plus>
+                </el-icon>
+                <el-tooltip
+                    :content="`花费${val.单价}: ${val.描述}`"
+                    placement="left"
+                >
+                  <el-icon class="被动收益图标">
+                    <QuestionFilled/>
+                  </el-icon>
+                </el-tooltip>
+              </div>
             </div>
-          </div>
+          </template>
+        </div>
+      </template>
+    </div>
+
+    <!--    底部按钮-->
+    <div style="display: flex;justify-content: space-around;">
+      <!--      提升种植效率-->
+      <div v-if="状态.被动收益.园丁.现有数>0" style="display: flex;flex-direction: row;align-items: center">
+        <el-button @click="提高种植效率" :disabled="状态.现有总数<状态.自己种植.单价">提升效率</el-button>
+        <el-icon>
+          <InfoFilled/>
+        </el-icon>
+      </div>
+
+      <!--      统一全球平菇市场-->
+      <div>
+        <template v-if="状态.最高总数>500">
+          <el-tooltip
+              :content="`花费500个平菇统一全球平菇市场,让我院生产效率永久翻倍!`"
+              placement="top"
+          >
+            <el-button @click="统一全球评估市场"
+                       :disabled="状态.是否统一全球评估市场 || 状态.现有总数<500">{{
+                状态.是否统一全球评估市场 ? '你已经统一全球平菇市场' : '统一全球平菇市场!'
+              }}
+            </el-button>
+          </el-tooltip>
         </template>
       </div>
-    </template>
 
-    <el-divider></el-divider>
-    <el-row>
-      <template v-if="状态.被动收益.园丁.现有数>0">
-        <el-tooltip
-            :content="`花费${状态.自己种植.单价}个平菇来提升自己的工作效率!`"
-            placement="top"
-        >
-          <el-button @click=" 状态.自己种植.效率=状态.自己种植.效率+1;
-  状态.现有总数=状态.现有总数-状态.自己种植.单价;
-  状态.自己种植.单价=状态.自己种植.单价+50;
-  "
-                     :disabled="状态.现有总数<状态.自己种植.单价">提升种植效率
-          </el-button>
-        </el-tooltip>
-        <el-text>当前效率: {{ 状态.自己种植.效率 }}个/次</el-text>
-      </template>
-    </el-row>
-    <el-row>
-      <template v-if="状态.最高总数>500">
-        <el-tooltip
-            :content="`花费500个平菇统一全球平菇市场,让我院生产效率永久翻倍!`"
-            placement="top"
-        >
-          <el-button @click="统一全球评估市场"
-                     :disabled="状态.是否统一全球评估市场 || 状态.现有总数<500">{{
-              状态.是否统一全球评估市场 ? '你已经统一全球平菇市场' : '统一全球平菇市场!'
-            }}
-          </el-button>
-        </el-tooltip>
-      </template>
-    </el-row>
-    <el-row>
-      <el-button
-          @click="ElMessage.success('恭喜!您平菇院的大名在全宇宙无人不知,无人不晓。现在，全宇宙的平菇都是您的了！')">
-        让你的平菇大院在宇宙各个角落生根发芽!生生不息!
-      </el-button>
-    </el-row>
+      <!--      通关！-->
+      <div>
+        <el-button
+            @click="ElMessage.success('恭喜!您平菇院的大名在全宇宙无人不知,无人不晓。现在，全宇宙的平菇都是您的了！')">
+          让你的平菇大院在宇宙各个角落生根发芽!生生不息!
+        </el-button>
+      </div>
+
+      <!--      <template v-if="状态.被动收益.园丁.现有数>0">-->
+      <!--        <el-tooltip-->
+      <!--            :content="`花费${状态.自己种植.单价}个平菇来提升自己的工作效率!`"-->
+      <!--            placement="top"-->
+      <!--        >-->
+      <!--          <el-button @click="提高种植效率" :disabled="状态.现有总数<状态.自己种植.单价">提升种植效率</el-button>-->
+      <!--        </el-tooltip>-->
+      <!--      </template>-->
+
+
+    </div>
   </div>
 
   <!--    {{ 状态 }}-->
@@ -91,11 +113,13 @@
 </template>
 <script setup>
 import {ref, reactive, computed, watch} from "vue";
-import {Male, Plus, QuestionFilled, Setting} from "@element-plus/icons-vue";
+import {CloseBold, InfoFilled, Male, Plus, QuestionFilled, Setting} from "@element-plus/icons-vue";
 import {ElMessage} from "element-plus";
+import vhCheck from "vh-check";
 
+vhCheck('browser-address-bar')
 const 状态 = ref({
-  现有总数: 50000,
+  现有总数: 10000,
   最高总数: 0, //如果直接在这里用计算属性,那么会无限循环报错,所以用下面的watch
   总效率: computed(() => {
     let total = 0;
@@ -272,11 +296,21 @@ function 购买(器械名, 器械) {
   器械.现有数 = 器械.现有数 + 1;
   器械.单价 = 器械.单价 + 器械.下次涨价
 }
+
+function 提高种植效率() {
+  状态.value.自己种植.效率 = 状态.value.自己种植.效率 + 1;
+  状态.现有总数 = 状态.现有总数 - 状态.value.自己种植.单价;
+  状态.value.自己种植.单价 = 状态.value.自己种植.单价 + 50;
+  ElMessage.success(`种植效率:${状态.value.自己种植.效率 - 1} --> ${状态.value.自己种植.效率}`)
+
+}
 </script>
 <style scoped>
 .主容器 {
   display: flex;
   flex-direction: column;
+  height: 100vh;
+  height: calc(100vh - var(--browser-address-bar, 0px));
 }
 
 .主页标题容器 {
@@ -324,10 +358,11 @@ function 购买(器械名, 器械) {
   display: flex;
   flex-direction: row;
   /*position: relative;*/
-  flex-grow: 2;
+  flex-grow: 1;
   /*background-color: coral;*/
   height: 7vh;
   background-size: cover;
+
 }
 
 .被动收益图标 {
