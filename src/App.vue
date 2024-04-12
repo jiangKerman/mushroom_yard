@@ -1,29 +1,32 @@
 <template>
   <div class="主容器">
     <!--  <el-text>欢迎来到平菇院，种植你的专属平菇</el-text>-->
-    <!--  <el-divider></el-divider>-->
-    <el-text size="large">院子里共有 {{ 状态.现有总数 }} 个平菇</el-text>
-    <el-text>{{ 状态.总效率 }} 个/秒</el-text>
+    <div class="主页标题容器">
+      <el-text class="字体颜色" size="large">院子里共有 {{ 状态.现有总数.toFixed(1) }} 个平菇</el-text>
+      <el-text class="字体颜色">{{ 状态.总效率.toFixed(1) }} 个/秒</el-text>
+    </div>
 
-    <div style="position: relative;" @click="状态.现有总数=状态.现有总数+状态.自己种植.效率">
-      <el-card shadow="hover">
-        <el-image src="/平菇.webp"></el-image>
-      </el-card>
+    <div class="主页内容容器" style="position: relative;text-align: center"
+         @click="状态.现有总数=状态.现有总数+状态.自己种植.效率">
+      <el-image
+          style="width:100%;height:100%;position: absolute;left: 0;top: 0;filter: brightness(100%) contrast(100%) grayscale(30%);"
+          src="https://2b.zol-img.com.cn/product/139/269/cedd3aQPoljU.jpg"></el-image>
+      <el-image style="height: 30vh;" src="/平菇.webp"></el-image>
       <Plus style="width: 3em;background-color: rgba(0,0,0,0.5);
       color: white;position: absolute;left: 50%;top: 50%;
       transform: translate(-50%,-50%);border-radius: 50%"></Plus>
     </div>
-    <!--    <el-button @click="状态.现有总数=状态.现有总数+状态.自己种植.效率">种平菇</el-button>-->
     <template v-for="(val,key) in 状态.被动收益" :key="key">
-      <div v-if="val.是否展示"  >
+      <div v-if="val.是否展示" :style="`background-image: url(${val.背景}); background-size: cover;`">
         <template v-if="val.是否展示">
           <div class="被动收益标题">
-            <el-text>{{ key }} ✖ {{ val.现有数 }} &nbsp;&nbsp;{{ val.单个效率 }}平菇/个/秒</el-text>
-            <el-text>共{{ val.总效率 }}/秒</el-text>
+            <el-text class="字体颜色">{{ key }} ✖ {{ val.现有数 }} &nbsp;&nbsp;{{ val.单个效率 }}平菇/个/秒</el-text>
+            <el-text class="字体颜色">共{{ val.总效率.toFixed(1) }}/秒</el-text>
           </div>
+          <!--          <div class="被动收益内容"  style='background-image: url("/草地.png")'>-->
           <div class="被动收益内容">
-            <div style="display: flex;flex-grow: 1">
-              <el-image style="max-height: 100%" fit="scale-down" src="/园丁.png" v-for="i in val.现有数"></el-image>
+            <div style="display: flex;flex-grow: 1;flex-shrink: 1;">
+              <el-image style="max-height: 100%;" fit="scale-down" :src="val.立绘" v-for="i in val.现有数"></el-image>
             </div>
             <div
                 style="display: flex;flex-direction: column;justify-content: space-around;margin-right: 1em">
@@ -32,7 +35,7 @@
               </el-icon>
               <el-tooltip
                   :content="`花费${val.单价}: ${val.描述}`"
-                  placement="top"
+                  placement="left"
               >
                 <el-icon class="被动收益图标">
                   <QuestionFilled/>
@@ -44,39 +47,6 @@
       </div>
     </template>
 
-    <!--  <el-row>-->
-    <!--    <template v-if="状态.最高总数>=1">-->
-    <!--      <el-tooltip-->
-    <!--          :content="`花费${状态.园丁.单价}个平菇来雇佣园丁为你工作!`"-->
-    <!--          placement="top"-->
-    <!--      >-->
-    <!--        <el-button @click=" 状态.现有总数=状态.现有总数-状态.园丁.单价;-->
-    <!--                            状态.园丁.现有数=状态.园丁.现有数+1;-->
-    <!--                            状态.园丁.单价=状态.园丁.单价+1"-->
-
-    <!--                   :disabled="状态.现有总数<状态.园丁.单价">雇佣园丁-->
-    <!--        </el-button>-->
-    <!--      </el-tooltip>-->
-    <!--      <el-text>园丁: {{ 状态.园丁.现有数 }}个 &nbsp;&nbsp; 总效率: {{ 状态.园丁.总效率 }} 个平菇每秒</el-text>-->
-    <!--    </template>-->
-    <!--  </el-row>-->
-    <!--  <el-row>-->
-    <!--    <template v-if="状态.园丁.现有数>0">-->
-    <!--      <el-tooltip-->
-    <!--          :content="`花费${状态.工业机器人.单价}个平菇来购买工业机器人为你种植!`"-->
-    <!--          placement="top"-->
-    <!--      >-->
-    <!--        <el-button @click=" 状态.现有总数=状态.现有总数-状态.工业机器人.单价;-->
-    <!--                            状态.工业机器人.现有数=状态.工业机器人.现有数+1;-->
-    <!--                            状态.工业机器人.单价=状态.工业机器人.单价+5"-->
-
-    <!--                   :disabled="状态.现有总数<状态.工业机器人.单价">购买工业机器人-->
-    <!--        </el-button>-->
-    <!--      </el-tooltip>-->
-    <!--      <el-text>园丁: {{ 状态.工业机器人.现有数 }}个 &nbsp;&nbsp; 总效率: {{ 状态.工业机器人.总效率 }} 个平菇每秒-->
-    <!--      </el-text>-->
-    <!--    </template>-->
-    <!--  </el-row>-->
     <el-divider></el-divider>
     <el-row>
       <template v-if="状态.被动收益.园丁.现有数>0">
@@ -108,11 +78,16 @@
         </el-tooltip>
       </template>
     </el-row>
-
+    <el-row>
+      <el-button
+          @click="ElMessage.success('恭喜!您平菇院的大名在全宇宙无人不知,无人不晓。现在，全宇宙的平菇都是您的了！')">
+        让你的平菇大院在宇宙各个角落生根发芽!生生不息!
+      </el-button>
+    </el-row>
   </div>
 
-  {{ 状态 }}
-  <!--  {{最高总数}}-->
+  <!--    {{ 状态 }}-->
+
 </template>
 <script setup>
 import {ref, reactive, computed, watch} from "vue";
@@ -120,7 +95,7 @@ import {Male, Plus, QuestionFilled, Setting} from "@element-plus/icons-vue";
 import {ElMessage} from "element-plus";
 
 const 状态 = ref({
-  现有总数: 500,
+  现有总数: 50000,
   最高总数: 0, //如果直接在这里用计算属性,那么会无限循环报错,所以用下面的watch
   总效率: computed(() => {
     let total = 0;
@@ -149,7 +124,9 @@ const 状态 = ref({
       下次涨价: 1,
       是否展示: computed(() => {
         return 状态.value.现有总数 > 0
-      })
+      }),
+      立绘: "/园丁.png",
+      背景: "https://img1.baidu.com/it/u=2338963158,2766763207&fm=253&fmt=auto&app=138&f=JPEG?w=750&h=500"
     },
     工业机器人: {
       现有数: 0,
@@ -163,7 +140,9 @@ const 状态 = ref({
       下次涨价: 5,
       是否展示: computed(() => {
         return 状态.value.被动收益.园丁.现有数 > 0
-      })
+      }),
+      立绘: "/机器人.png",
+      背景: "https://q6.itc.cn/images01/20240311/342cf88af6984f9ea893a5e2b5934325.png"
     },
     腐木工厂: {
       现有数: 0,
@@ -177,7 +156,9 @@ const 状态 = ref({
       下次涨价: 8,
       是否展示: computed(() => {
         return 状态.value.被动收益.工业机器人.现有数 > 0
-      })
+      }),
+      立绘: "/腐木立绘.png",
+      背景: "https://img2.baidu.com/it/u=629397067,750530828&fm=253&fmt=auto&app=138&f=JPEG?w=751&h=500"
     },
     从隔壁平菇院挖人: {
       现有数: 0,
@@ -191,21 +172,27 @@ const 状态 = ref({
       下次涨价: 9,
       是否展示: computed(() => {
         return 状态.value.被动收益.腐木工厂.现有数 > 0
-      })
+      }),
+      立绘: "/平菇专家.png",
+      背景: "https://img2.baidu.com/it/u=2286984080,2055483171&fm=253&fmt=auto&app=120&f=JPEG?w=801&h=500"
+
     },
-    流浪者团队: {
+    牛马打工人: {
       现有数: 0,
       单个效率: 1.3,
       单价: 110,
       总效率: computed(() => {
-        return 状态.value.被动收益.流浪者团队.单个效率 * 状态.value.被动收益.流浪者团队.现有数
+        return 状态.value.被动收益.牛马打工人.单个效率 * 状态.value.被动收益.牛马打工人.现有数
       }),
-      描述: '花钱找中介公司压榨流浪者的生产力!',
-      购买按钮信息: '找中介公司发虚假广告',
+      描述: '花钱找中介公司压榨打工仔的生产力!他们比机器人还好用!',
+      购买按钮信息: '招聘打工人',
       下次涨价: 10,
       是否展示: computed(() => {
         return 状态.value.被动收益.从隔壁平菇院挖人.现有数 > 0
-      })
+      }),
+      立绘: "/打工仔.png",
+      背景: "https://photo.tuchong.com/21326148/f/1187581093.jpg"
+
     },
     椒鱼平菇联盟: {
       现有数: 0,
@@ -218,10 +205,45 @@ const 状态 = ref({
       购买按钮信息: '组件椒鱼评估联盟',
       下次涨价: 12,
       是否展示: computed(() => {
-        return 状态.value.被动收益.流浪者团队.现有数 > 0
-      })
-    },
+        return 状态.value.被动收益.牛马打工人.现有数 > 0
+      }),
+      立绘: "/平菇联盟.png",
+      背景: "https://img4.18183.com/uploads/allimg/171129/65-1G129115302.jpg@q_80"
 
+    },
+    月球殖民团: {
+      现有数: 0,
+      单个效率: 8,
+      单价: 500,
+      总效率: computed(() => {
+        return 状态.value.被动收益.月球殖民团.单个效率 * 状态.value.被动收益.月球殖民团.现有数
+      }),
+      描述: '地球上的土地不够了!发射一些员工到月球去种植平菇!',
+      购买按钮信息: '发射月球平菇殖民团!',
+      下次涨价: 50,
+      是否展示: computed(() => {
+        return 状态.value.被动收益.椒鱼平菇联盟.现有数 > 0
+      }),
+      立绘: "/月球殖民团.png",
+      背景: "https://img.cgmodel.com/image/2020/0303/cover/533070-2000137552.jpg"
+
+    },
+    平菇传送门: {
+      现有数: 0,
+      单个效率: 28,
+      单价: 1500,
+      总效率: computed(() => {
+        return 状态.value.被动收益.平菇传送门.单个效率 * 状态.value.被动收益.平菇传送门.现有数
+      }),
+      描述: '建立传送门,窃取异世界的平菇!',
+      购买按钮信息: '建立平菇传送门',
+      下次涨价: 5,
+      是否展示: computed(() => {
+        return 状态.value.被动收益.月球殖民团.现有数 > 0
+      }),
+      立绘: "/传送门.png",
+      背景: "https://img.hack6.com/tu/20211014/1633938045f82otk.jpg"
+    },
   },
 
 })
@@ -257,6 +279,32 @@ function 购买(器械名, 器械) {
   flex-direction: column;
 }
 
+.主页标题容器 {
+  display: flex;
+  flex-direction: column;
+  background-image: url("https://pic.52112.com/180320/180320_66/IHacPhuVIn_small.jpg");
+  background-size: cover
+}
+
+.主页内容容器 {
+  /*background-image: url("https://2b.zol-img.com.cn/product/139/269/cedd3aQPoljU.jpg");*/
+  /*background-size: cover;*/
+  /*filter: brightness(150%) contrast(120%) grayscale(30%);*/
+  /*filter: ;*/
+}
+
+.主页内容容器::before {
+  /*content: '123';*/
+  /*background: chocolate;*/
+  /*z-index: 0; !* 将伪元素置于底层 *!*/
+  /*background-image: url("https://2b.zol-img.com.cn/product/139/269/cedd3aQPoljU.jpg");*/
+  /*background-size: cover;*/
+}
+
+.字体颜色 {
+  color: white;
+}
+
 .被动收益 {
   display: flex;
   flex-direction: column;
@@ -268,7 +316,7 @@ function 购买(器械名, 器械) {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  background-color: rgba(20, 20, 20, 0.5);
+  background-color: rgba(12, 12, 35, 0.6);
 
 }
 
@@ -277,8 +325,9 @@ function 购买(器械名, 器械) {
   flex-direction: row;
   /*position: relative;*/
   flex-grow: 2;
-  background-color: coral;
+  /*background-color: coral;*/
   height: 7vh;
+  background-size: cover;
 }
 
 .被动收益图标 {
