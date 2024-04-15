@@ -1,6 +1,6 @@
 <template>
   <div class="主容器">
-    <!--  <el-text>欢迎来到平菇院，种植你的专属平菇</el-text>-->
+      <el-text>我的平菇院</el-text>
     <!--  标题和平菇图片-->
     <div>
       <div class="主页标题容器">
@@ -43,7 +43,10 @@
               </div>
               <div
                   style="display: flex;flex-direction: column;justify-content: space-around;margin-right: 1em">
-                <el-icon class="被动收益图标" @click="购买(key,val)">
+                <!--                <el-icon class="被动收益图标" @click="购买(key,val)">-->
+                <!--                  <Plus></Plus>-->
+                <!--                </el-icon>-->
+                <el-icon class="被动收益图标" @click="展示器材对话=true;当前器材 = {器材名:key,器材:val}">
                   <Plus></Plus>
                 </el-icon>
                 <el-tooltip
@@ -65,33 +68,18 @@
     <div style="display: flex;justify-content: space-around;">
       <!--      提升种植效率-->
       <div v-if="状态.被动收益.园丁.现有数>0" style="display: flex;flex-direction: row;align-items: center">
-        <el-button @click="提高种植效率" :disabled="状态.现有总数<状态.自己种植.单价">提升效率</el-button>
-        <el-icon>
-          <InfoFilled/>
-        </el-icon>
+        <el-button @click="展示提升效率对话=true">提升效率</el-button>
       </div>
 
       <!--      统一全球平菇市场-->
-      <div>
-        <template v-if="状态.最高总数>500">
-          <el-tooltip
-              :content="`花费500个平菇统一全球平菇市场,让我院生产效率永久翻倍!`"
-              placement="top"
-          >
-            <el-button @click="统一全球评估市场"
-                       :disabled="状态.是否统一全球评估市场 || 状态.现有总数<500">{{
-                状态.是否统一全球评估市场 ? '你已经统一全球平菇市场' : '统一全球平菇市场!'
-              }}
-            </el-button>
-          </el-tooltip>
-        </template>
+      <div v-if="状态.最高总数>500">
+        <el-button @click="展示统一市场对话=true">统一全球平菇市场</el-button>
       </div>
 
       <!--      通关！-->
-      <div>
-        <el-button
-            @click="ElMessage.success('恭喜!您平菇院的大名在全宇宙无人不知,无人不晓。现在，全宇宙的平菇都是您的了！')">
-          让你的平菇大院在宇宙各个角落生根发芽!生生不息!
+      <div v-if="状态.最高总数>1000">
+        <el-button @click="展示建立平菇文明对话=true">
+          建立平菇文明！
         </el-button>
       </div>
 
@@ -108,12 +96,204 @@
     </div>
   </div>
 
+  <!-- 购买器材的对话 -->
+  <el-dialog
+      v-model="展示器材对话"
+      width="95%"
+  >
+    <template #header>
+      <div style="display: flex;flex-direction: row;justify-content: space-between">
+        {{ 当前器材.器材名 }}
+        <el-button type="primary" size="small" plain @click="购买(当前器材.器材名,当前器材.器材) ">
+          {{ 当前器材.器材.购买按钮信息 }}
+        </el-button>
+      </div>
+    </template>
+    <template #default>
+      <div style="display: flex;flex-direction: column">
+        <div style="display: flex;flex-direction: row;align-items: center">
+          <el-icon>
+            <InfoFilled/>
+          </el-icon>
+          <el-text>{{ 当前器材.器材.描述 }}</el-text>
+        </div>
+        <div style="display: flex;flex-direction: row">
+          <el-icon>
+            <User/>
+          </el-icon>
+          <el-text>您共{{ 当前器材.器材.现有数 }}有个{{ 当前器材.器材名 }}，每秒收获{{
+              当前器材.器材.总效率.toFixed(1)
+            }}个平菇
+          </el-text>
+        </div>
+        <div style="display: flex;flex-direction: row">
+          <el-icon>
+            <Coin/>
+          </el-icon>
+          <el-text>当前资费: {{ 当前器材.器材.单价 }} 平菇/每个</el-text>
+        </div>
+      </div>
+
+      <div
+          :style="`display: flex;flex-direction: row;background-image: url(${当前器材.器材.背景}); background-size: cover;height: 7vh`">
+        <div
+            :style="`display: flex;flex-grow: 1;flex-shrink: 1;` ">
+          <el-image style="max-height: 100%;" fit="scale-down" :src="当前器材.器材.立绘"
+                    v-for="i in Math.min(当前器材.器材.现有数,15)"></el-image>
+        </div>
+        <div v-if="当前器材.器材.现有数>15" style="display: flex;align-items: center">
+          <!--                <el-text>-->
+          <el-icon class="字体颜色">
+            <CloseBold/>
+          </el-icon>
+          <!--                </el-text>-->
+          <el-text class="字体颜色">{{ 当前器材.器材.现有数 }}</el-text>
+        </div>
+      </div>
+
+    </template>
+    <template #footer>
+    </template>
+  </el-dialog>
+
+  <!--  提升效率的对话框 -->
+  <el-dialog
+      v-model="展示提升效率对话"
+      width="95%"
+  >
+    <template #header>
+      <div style="display: flex;flex-direction: row;justify-content: space-between">
+        提升效率
+        <el-button type="primary" size="small" plain @click="提高种植效率" :disabled="状态.现有总数<状态.自己种植.单价">
+          提高种植效率
+        </el-button>
+      </div>
+    </template>
+    <template #default>
+      <div style="display: flex;flex-direction: column">
+        <div style="display: flex;flex-direction: row;align-items: center">
+          <el-icon>
+            <InfoFilled/>
+          </el-icon>
+          <el-text> 您可以提升自己手动种植平菇的效率</el-text>
+        </div>
+        <div style="display: flex;flex-direction: row">
+          <el-icon>
+            <User/>
+          </el-icon>
+          <el-text>您当前的效率为: {{ 状态.自己种植.效率 }}个平菇/每次
+          </el-text>
+        </div>
+        <div style="display: flex;flex-direction: row">
+          <el-icon>
+            <Coin/>
+          </el-icon>
+          <el-text>培训所需资费: {{ 状态.自己种植.单价 }} 平菇/每次</el-text>
+        </div>
+      </div>
+    </template>
+    <template #footer>
+    </template>
+  </el-dialog>
+
+  <!--  统一市场的 对话框-->
+  <el-dialog
+      v-model="展示统一市场对话"
+      width="95%"
+  >
+    <template #header>
+      <div style="display: flex;flex-direction: row;justify-content: space-between">
+        统一市场
+        <el-button type="primary" size="small" plain @click="统一全球评估市场" :disabled="状态.统一市场.是否统一全球评估市场">
+          {{状态.统一市场.是否统一全球评估市场? '已统一' : '我要统一市场!'}}
+        </el-button>
+      </div>
+    </template>
+    <template #default>
+      <div style="display: flex;flex-direction: column">
+        <div style="display: flex;flex-direction: row;align-items: center">
+          <el-icon>
+            <InfoFilled/>
+          </el-icon>
+          <el-text> 花大价钱统一全球平菇市场,您平菇院的效率永久翻倍!</el-text>
+        </div>
+        <div style="display: flex;flex-direction: row">
+          <el-icon>
+            <User/>
+          </el-icon>
+          <el-text>{{
+              状态.统一市场.是否统一全球评估市场 ? '恭喜!您已统一全球平菇市场!平菇院的产量更高了!' : '您还没有统一全球平菇市场!加油啊!'
+            }}
+          </el-text>
+        </div>
+        <div style="display: flex;flex-direction: row">
+          <el-icon>
+            <Coin/>
+          </el-icon>
+          <el-text>{{
+              状态.统一市场.是否统一全球评估市场 ? '你已经统一市场' : `统一市场需要${状态.统一市场.花费}个平菇`
+            }}
+          </el-text>
+        </div>
+      </div>
+
+    </template>
+    <template #footer>
+    </template>
+  </el-dialog>
+
+  <!--  建立平菇文明的对话框-->
+  <el-dialog
+      v-model="展示建立平菇文明对话"
+      width="95%"
+  >
+    <template #header>
+      <div style="display: flex;flex-direction: row;justify-content: space-between">
+        建立平菇文明!
+        <el-button type="primary" size="small" plain @click="建立平菇文明" :disabled="状态.建立平菇文明.是否建立平菇文明" >
+          {{状态.建立平菇文明.是否建立平菇文明 ? "你赢了" : "我要建立平菇文明!"}}
+        </el-button>
+      </div>
+    </template>
+    <template #default>
+      <div style="display: flex;flex-direction: column">
+        <div style="display: flex;flex-direction: row;align-items: center">
+          <el-icon>
+            <InfoFilled/>
+          </el-icon>
+          <el-text> 举全平菇院之力,向宇宙各地发射平菇殖民舰队,建立一个统一的、辉煌的、至高无上的平菇文明！整个宇宙都会充满平菇！</el-text>
+        </div>
+        <div style="display: flex;flex-direction: row">
+          <el-icon>
+            <User/>
+          </el-icon>
+          <el-text>{{
+              状态.建立平菇文明.是否建立平菇文明 ? '现在，整个宇宙都是您平菇大院的了！' : '宇宙中还有其他势力，加油啊！'
+            }}
+          </el-text>
+        </div>
+        <div style="display: flex;flex-direction: row">
+          <el-icon>
+            <Coin/>
+          </el-icon>
+          <el-text>{{
+              状态.建立平菇文明.是否建立平菇文明 ? '你已经拥有了整个可见宇宙' : `统一市场需要${状态.建立平菇文明.花费}个平菇`
+            }}
+          </el-text>
+        </div>
+      </div>
+
+    </template>
+    <template #footer>
+    </template>
+  </el-dialog>
+
   <!--    {{ 状态 }}-->
 
 </template>
 <script setup>
 import {ref, reactive, computed, watch} from "vue";
-import {CloseBold, InfoFilled, Male, Plus, QuestionFilled, Setting} from "@element-plus/icons-vue";
+import {CloseBold, Coin, InfoFilled, Male, Plus, QuestionFilled, Setting, User} from "@element-plus/icons-vue";
 import {ElMessage} from "element-plus";
 import vhCheck from "vh-check";
 
@@ -134,7 +314,15 @@ const 状态 = ref({
     效率: 1,
     单价: 50,
   },
-  是否统一全球评估市场: false,
+  统一市场: {
+    是否统一全球评估市场: false,
+    花费: 500,
+  },
+  建立平菇文明: {
+    是否建立平菇文明: false,
+    花费: 2000,
+  },
+
   被动收益: {
     园丁: {
       现有数: 0,
@@ -225,7 +413,7 @@ const 状态 = ref({
       总效率: computed(() => {
         return 状态.value.被动收益.椒鱼平菇联盟.单个效率 * 状态.value.被动收益.椒鱼平菇联盟.现有数
       }),
-      描述: '组件椒鱼+平菇™联盟,会吸引更多的人来到我们平菇院',
+      描述: '组建椒鱼+平菇™联盟,会吸引更多的人来到我们平菇院',
       购买按钮信息: '组件椒鱼评估联盟',
       下次涨价: 12,
       是否展示: computed(() => {
@@ -278,13 +466,15 @@ setInterval(() => {
   状态.value.现有总数 = 状态.value.现有总数 + 状态.value.总效率
 }, 1000)
 
-function 统一全球评估市场() {
-  状态.现有总数 = 状态.现有总数 - 500;
-  Object.entries(状态.value.被动收益).forEach(([key, val]) => {
-    val.单个效率 = val.单个效率 * 2
-  })
-  状态.value.是否统一全球评估市场 = true
-}
+const 当前器材 = ref()
+const 展示器材对话 = ref(false)
+
+const 展示提升效率对话 = ref(false)
+
+const 展示统一市场对话 = ref(false)
+
+const 展示建立平菇文明对话 = ref(false)
+
 
 function 购买(器械名, 器械) {
   console.log(`买${器械名}`)
@@ -299,10 +489,25 @@ function 购买(器械名, 器械) {
 
 function 提高种植效率() {
   状态.value.自己种植.效率 = 状态.value.自己种植.效率 + 1;
-  状态.现有总数 = 状态.现有总数 - 状态.value.自己种植.单价;
+  状态.value.现有总数 = 状态.value.现有总数 - 状态.value.自己种植.单价;
   状态.value.自己种植.单价 = 状态.value.自己种植.单价 + 50;
   ElMessage.success(`种植效率:${状态.value.自己种植.效率 - 1} --> ${状态.value.自己种植.效率}`)
 
+}
+
+function 统一全球评估市场() {
+  状态.value.现有总数 = 状态.value.现有总数 - 状态.value.统一市场.花费;
+  Object.entries(状态.value.被动收益).forEach(([key, val]) => {
+    val.单个效率 = val.单个效率 * 2
+  })
+  状态.value.统一市场.是否统一全球评估市场 = true
+}
+
+function 建立平菇文明() {
+  状态.value.现有总数 = 状态.value.现有总数 - 状态.value.建立平菇文明.花费;
+  状态.value.建立平菇文明.是否建立平菇文明 = true
+
+  console.log('你已经建立了平菇文明')
 }
 </script>
 <style scoped>
