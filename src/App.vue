@@ -3,20 +3,40 @@
 
     <!--  标题和平菇图片-->
     <div>
-      <div class="主页标题容器">
-        <el-text class="字体颜色" style="font-size: 1.5em">我的平菇大院</el-text>
-        <el-text class="字体颜色" size="large">院子里共有 {{ 状态.现有总数.toFixed(1) }} 个平菇</el-text>
-        <el-text class="字体颜色">{{ 状态.总效率.toFixed(1) }} 个/秒</el-text>
+      <div
+          style="display: flex;flex-direction: row;justify-content: space-between;background-image: url('/主页/主页标题背景.jpg');  background-size: cover">
+        <div style="display: flex;align-items: center">
+          <el-image style="height: 3em" src="/主页/平菇.webp"></el-image>
+        </div>
+        <div style="display: flex;
+                    flex-direction: column;
+                    ">
+          <el-text class="字体颜色" style="font-size: 1.5em">我的平菇大院</el-text>
+          <el-text class="字体颜色" size="large">院子里共有 <span id="平菇总数" style="display:inline-block;">{{
+              状态.现有总数.toFixed(1)
+            }}</span> 个平菇
+          </el-text>
+          <el-text class="字体颜色">{{ 状态.总效率.toFixed(1) }} 个/秒</el-text>
+        </div>
+        <div style="display: flex;align-items: center">
+          <el-image style="height: 3em;transform:scaleX(-1)" src="/主页/平菇.webp"></el-image>
+        </div>
+
       </div>
-      <div class="主页内容容器" style="position: relative;text-align: center">
+      <div style="position: relative;text-align: center">
         <el-image
             style="width:100%;height:100%;position: absolute;left: 0;top: 0;filter: brightness(100%) contrast(100%) grayscale(30%);"
             src="/主页/主页背景图.jpg"></el-image>
-        <el-image style="height: 25vh;" src="/主页/平菇.webp"></el-image>
+        <el-image id="主页平菇" style="height: 25vh;" src="/主页/平菇.webp"></el-image>
+        <div id="弹出蘑菇增加"
+             style="color:white;position: absolute;top: 50%;right: 1em;transform: translate(0,-50%);opacity: 0">
+          平菇+{{ 状态.自己种植.效率 }}
+        </div>
+
         <Plus style="width: 3em;background-color: rgba(0,0,0,0.5);
       color: white;position: absolute;left: 50%;top: 50%;
       transform: translate(-50%,-50%);border-radius: 50%"
-              @click="状态.现有总数=状态.现有总数+状态.自己种植.效率"></Plus>
+              @click="手动种植"></Plus>
       </div>
     </div>
 
@@ -144,8 +164,9 @@
 
       <div style="display: flex;flex-direction: column;align-items: center">
         <el-image style="width: 25%;" :src="当前器材.器材.立绘"></el-image>
-        <el-button type="primary" size="small" plain @click="购买(当前器材.器材名,当前器材.器材) ">
-          {{ 当前器材.器材.购买按钮信息 }}
+        <el-button :type="当前器材.器材.单价>状态.现有总数? 'danger' : 'primary'" size="small" plain
+                   @click="购买(当前器材.器材名,当前器材.器材) " :disabled="当前器材.器材.单价>状态.现有总数">
+          {{ 当前器材.器材.单价 > 状态.现有总数 ? '平菇不够' : 当前器材.器材.购买按钮信息 }}
         </el-button>
       </div>
 
@@ -203,7 +224,7 @@
       <div style="display: flex;flex-direction: row;justify-content: space-between">
         统一市场
         <el-button type="primary" size="small" plain @click="统一全球评估市场"
-                   :disabled="状态.统一市场.是否统一全球评估市场">
+                   :disabled="状态.统一市场.是否统一全球评估市场 || 状态.统一市场.花费>状态.现有总数">
           {{ 状态.统一市场.是否统一全球评估市场 ? '已统一' : '我要统一市场!' }}
         </el-button>
       </div>
@@ -250,7 +271,7 @@
       <div style="display: flex;flex-direction: row;justify-content: space-between">
         建立平菇文明!
         <el-button type="primary" size="small" plain @click="建立平菇文明"
-                   :disabled="状态.建立平菇文明.是否建立平菇文明">
+                   :disabled="状态.建立平菇文明.是否建立平菇文明 || 状态.建立平菇文明.花费>状态.现有总数">
           {{ 状态.建立平菇文明.是否建立平菇文明 ? "你赢了" : "我要建立平菇文明!" }}
         </el-button>
       </div>
@@ -279,7 +300,7 @@
             <Coin/>
           </el-icon>
           <el-text>{{
-              状态.建立平菇文明.是否建立平菇文明 ? '你已经拥有了整个可见宇宙' : `统一市场需要${状态.建立平菇文明.花费}个平菇`
+              状态.建立平菇文明.是否建立平菇文明 ? '你已经拥有了整个可见宇宙' : `建立平菇文明需要${状态.建立平菇文明.花费}个平菇`
             }}
           </el-text>
         </div>
@@ -297,8 +318,37 @@
 import {ref, reactive, computed, watch} from "vue";
 import {CloseBold, Coin, InfoFilled, Male, Plus, QuestionFilled, Setting, User} from "@element-plus/icons-vue";
 import {ElMessage} from "element-plus";
+import {onMounted} from "vue";
 import vhCheck from "vh-check";
+import anime from "animejs";
 
+
+onMounted(() => {
+  const 恢复的状态 = JSON.parse(localStorage.getItem("状态"))
+
+  // 恢复所有非计算属性
+  let 完整恢复的 = ['现有总数', '最高总数', '自己种植', '统一市场', '建立平菇文明']
+  for (let i of 完整恢复的) {
+    状态.value[i] = 恢复的状态[i]
+    // console.log(i)
+  }
+  // for (let i of (状态.value.被动收益,恢复的状态.被动收益)){
+  //   console.log(i)
+  // }
+
+  // 恢复被动收益
+  // let 被动收益恢复的=['现有数','单个效率','单价','描述','购买按钮信息','下次涨价','立绘','背景']
+  let 被动收益恢复的=['现有数','单个效率','单价','描述','购买按钮信息','下次涨价',]
+  Object.entries(状态.value.被动收益).forEach(([key, val]) => {
+    console.log(key, val)
+    for (let i of 被动收益恢复的){
+      // console.log(val[i])
+      val[i] = 恢复的状态.被动收益[key][i]
+      // console.log(恢复的状态.被动收益[key][i])
+    }
+  })
+
+})
 vhCheck('browser-address-bar')
 const 状态 = ref({
   现有总数: 0,
@@ -416,7 +466,7 @@ const 状态 = ref({
         return 状态.value.被动收益.椒鱼平菇联盟.单个效率 * 状态.value.被动收益.椒鱼平菇联盟.现有数
       }),
       描述: '组建椒鱼+平菇™联盟,会吸引更多的人来到我们平菇院',
-      购买按钮信息: '组件椒鱼评估联盟',
+      购买按钮信息: '组建椒鱼评估联盟',
       下次涨价: 12,
       是否展示: computed(() => {
         return 状态.value.被动收益.牛马打工人.现有数 > 0
@@ -465,7 +515,18 @@ watch(状态.value, (新状态) => {
   状态.value.最高总数 = Math.max(新状态.现有总数, 新状态.最高总数)
 })
 setInterval(() => {
+  let 上次总数 = 状态.value.现有总数
   状态.value.现有总数 = 状态.value.现有总数 + 状态.value.总效率
+  // anime({
+  //   targets: '#平菇总数',innerHTML: [上次总数, 状态.value.现有总数],
+  //
+  //   round: 1,
+  //   easing: 'linear',
+  //   duration: 1000,
+  //
+  // })
+
+  localStorage.setItem("状态", JSON.stringify(状态.value))
 }, 1000)
 
 const 当前器材 = ref()
@@ -477,6 +538,38 @@ const 展示统一市场对话 = ref(false)
 
 const 展示建立平菇文明对话 = ref(false)
 
+
+function 手动种植() {
+  // let 上次总数 = 状态.value.现有总数
+  状态.value.现有总数 = 状态.value.现有总数 + 状态.value.自己种植.效率
+
+  let a = anime({
+    targets: '#主页平菇',
+    // translateX: [-10,10],
+    scale: [1, 0.8],
+    // direction: 'alternate',
+    autoplay: true,
+  })
+
+  // 在右侧弹出蘑菇数量增加
+  anime({
+    targets: '#弹出蘑菇增加',
+    opacity: [1, 0],
+    duration: 5000,
+    // scale:[1,0.8]
+  })
+
+
+  // 手动种植后要立马更新数据
+
+  // anime({
+  //   targets: '#平菇总数',
+  //   innerHTML: 状态.value.现有总数,
+  //   round: 1,
+  //   // duration: 100,
+  // })
+
+}
 
 function 购买(器械名, 器械) {
   console.log(`买${器械名}`)
@@ -513,7 +606,7 @@ function 建立平菇文明() {
 }
 
 // 测试
-状态.value.现有总数 = 1000
+状态.value.现有总数 = 1500
 Object.entries(状态.value.被动收益).forEach(([key, val]) => {
   val.现有数 = 5
 })
@@ -528,27 +621,6 @@ Object.entries(状态.value.被动收益).forEach(([key, val]) => {
   height: calc(100vh - var(--browser-address-bar, 0px));
 }
 
-.主页标题容器 {
-  display: flex;
-  flex-direction: column;
-  background-image: url("/主页/主页标题背景.jpg");
-  background-size: cover
-}
-
-.主页内容容器 {
-  /*background-image: url("https://2b.zol-img.com.cn/product/139/269/cedd3aQPoljU.jpg");*/
-  /*background-size: cover;*/
-  /*filter: brightness(150%) contrast(120%) grayscale(30%);*/
-  /*filter: ;*/
-}
-
-.主页内容容器::before {
-  /*content: '123';*/
-  /*background: chocolate;*/
-  /*z-index: 0; !* 将伪元素置于底层 *!*/
-  /*background-image: url("https://2b.zol-img.com.cn/product/139/269/cedd3aQPoljU.jpg");*/
-  /*background-size: cover;*/
-}
 
 .字体颜色 {
   color: white;
