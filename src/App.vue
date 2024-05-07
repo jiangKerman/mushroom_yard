@@ -1,112 +1,118 @@
 <template>
-  <div class="主容器">
+  <div style="display: flex;flex-direction: row;justify-content: center;background-image: url('/主页/平菇.webp')">
+<!--    <div>-->
+<!--      左侧空白-->
+<!--    </div>-->
+    <div class="主容器">
 
-    <!--  标题和平菇图片-->
-    <div>
-      <div
-          style="display: flex;flex-direction: row;justify-content: space-between;background-image: url('/主页/主页标题背景.jpg');  background-size: cover">
-        <div style="display: flex;align-items: center">
-          <el-image style="height: 3em" src="/主页/平菇.webp"></el-image>
-        </div>
-        <div style="display: flex;
+      <!--  标题和平菇图片-->
+      <div>
+        <div
+            style="display: flex;flex-direction: row;justify-content: space-between;background-image: url('/主页/主页标题背景.jpg');  background-size: cover">
+          <div style="display: flex;align-items: center">
+            <el-image style="height: 3em" src="/主页/平菇.webp"></el-image>
+          </div>
+          <div style="display: flex;
                     flex-direction: column;
                     ">
-          <el-text class="字体颜色" style="font-size: 1.5em">我的平菇大院</el-text>
-          <el-text class="字体颜色" size="large">院子里共有 <span id="平菇总数" style="display:inline-block;">{{
-              状态.现有总数.toFixed(1)
-            }}</span> 个平菇
-          </el-text>
-          <el-text class="字体颜色">{{ 状态.总效率.toFixed(1) }} 个/秒</el-text>
-        </div>
-        <div style="display: flex;align-items: center">
-          <el-image style="height: 3em;transform:scaleX(-1)" src="/主页/平菇.webp"></el-image>
-        </div>
+            <el-text class="字体颜色" style="font-size: 1.5em">我的平菇大院</el-text>
+            <el-text class="字体颜色" size="large">院子里共有 <span id="平菇总数" style="display:inline-block;">{{
+                状态.现有总数.toFixed(1)
+              }}</span> 个平菇
+            </el-text>
+            <el-text class="字体颜色">{{ 状态.总效率.toFixed(1) }} 个/秒</el-text>
+          </div>
+          <div style="display: flex;align-items: center">
+            <el-image style="height: 3em;transform:scaleX(-1)" src="/主页/平菇.webp"></el-image>
+          </div>
 
-      </div>
-      <div style="position: relative;text-align: center">
-        <el-image
-            style="width:100%;height:100%;position: absolute;left: 0;top: 0;filter: brightness(100%) contrast(100%) grayscale(30%);"
-            src="/主页/主页背景图.jpg"></el-image>
-        <el-image id="主页平菇" style="height: 25vh;" src="/主页/平菇.webp"></el-image>
-        <div id="弹出蘑菇增加"
-             style="color:white;position: absolute;top: 50%;right: 1em;transform: translate(0,-50%);opacity: 0">
-          平菇+{{ 状态.自己种植.效率 }}
         </div>
+        <div style="position: relative;text-align: center">
+          <el-image
+              style="width:100%;height:100%;position: absolute;left: 0;top: 0;filter: brightness(100%) contrast(100%) grayscale(30%);"
+              src="/主页/主页背景图.jpg"></el-image>
+          <el-image id="主页平菇" style="height: 25vh;" src="/主页/平菇.webp"></el-image>
+          <div id="弹出蘑菇增加"
+               style="color:white;position: absolute;top: 50%;right: 1em;transform: translate(0,-50%);opacity: 0">
+            平菇+{{ 状态.自己种植.效率 }}
+          </div>
 
-        <Plus style="width: 3em;background-color: rgba(0,0,0,0.5);
+          <Plus style="width: 3em;background-color: rgba(0,0,0,0.5);
       color: white;position: absolute;left: 50%;top: 50%;
       transform: translate(-50%,-50%);border-radius: 50%"
-              @click="手动种植"></Plus>
-      </div>
-    </div>
-
-    <!--    收益器材-->
-    <div
-        style="display: flex;flex-direction: column;flex-grow: 1;overflow-y: auto;background-image: url('/主页/主页标题背景.jpg');">
-      <template v-for="(val,key) in 状态.被动收益" :key="key">
-        <div v-if="val.是否展示" :style="`background-image: url(${val.背景}); background-size: cover;`">
-          <template v-if="val.是否展示">
-            <div class="被动收益标题">
-              <el-text class="字体颜色">{{ key }} : {{ val.单个效率 }}平菇/个/秒</el-text>
-              <el-text class="字体颜色">共{{ val.总效率.toFixed(1) }}/秒</el-text>
-            </div>
-            <div class="被动收益内容">
-              <div style="display: flex;flex-grow: 1;flex-shrink: 1;">
-                <el-image style="max-height: 100%;" fit="scale-down" :src="val.立绘"
-                          v-for="i in Math.min(val.现有数,15)"></el-image>
-              </div>
-              <div v-if="val.现有数>15" style="display: flex;align-items: center">
-                <!--                <el-text>-->
-                <el-icon class="字体颜色">
-                  <CloseBold/>
-                </el-icon>
-                <!--                </el-text>-->
-                <el-text class="字体颜色">{{ val.现有数 }}</el-text>
-              </div>
-              <div
-                  style="display: flex;flex-direction: column;justify-content: space-around;margin-right: 1em">
-                <!--                <el-icon class="被动收益图标" @click="购买(key,val)">-->
-                <!--                  <Plus></Plus>-->
-                <!--                </el-icon>-->
-                <el-icon class="被动收益图标" @click="展示器材对话=true;当前器材 = {器材名:key,器材:val}">
-                  <Plus></Plus>
-                </el-icon>
-              </div>
-            </div>
-          </template>
+                @click="手动种植"></Plus>
         </div>
-      </template>
+      </div>
+
+      <!--    收益器材-->
+      <div
+          style="display: flex;flex-direction: column;flex-grow: 1;overflow-y: auto;background-image: url('/主页/主页标题背景.jpg');">
+        <template v-for="(val,key) in 状态.被动收益" :key="key">
+          <div v-if="val.是否展示" :style="`background-image: url(${val.背景}); background-size: cover;`">
+            <template v-if="val.是否展示">
+              <div class="被动收益标题">
+                <el-text class="字体颜色">{{ key }} : {{ val.单个效率 }}平菇/个/秒</el-text>
+                <el-text class="字体颜色">共{{ val.总效率.toFixed(1) }}/秒</el-text>
+              </div>
+              <div class="被动收益内容">
+                <div style="display: flex;flex-grow: 1;flex-shrink: 1;">
+                  <el-image style="max-height: 100%;" fit="scale-down" :src="val.立绘"
+                            v-for="i in Math.min(val.现有数,15)"></el-image>
+                </div>
+                <div v-if="val.现有数>15" style="display: flex;align-items: center">
+                  <!--                <el-text>-->
+                  <el-icon class="字体颜色">
+                    <CloseBold/>
+                  </el-icon>
+                  <!--                </el-text>-->
+                  <el-text class="字体颜色">{{ val.现有数 }}</el-text>
+                </div>
+                <div
+                    style="display: flex;flex-direction: column;justify-content: space-around;margin-right: 1em">
+                  <!--                <el-icon class="被动收益图标" @click="购买(key,val)">-->
+                  <!--                  <Plus></Plus>-->
+                  <!--                </el-icon>-->
+                  <el-icon class="被动收益图标" @click="展示器材对话=true;当前器材 = {器材名:key,器材:val}">
+                    <Plus></Plus>
+                  </el-icon>
+                </div>
+              </div>
+            </template>
+          </div>
+        </template>
+      </div>
+
+      <!--    底部按钮-->
+      <div style="display: flex;justify-content: space-around;background-image: url('/主页/主页标题背景.jpg')">
+        <!--      提升种植效率-->
+        <div v-if="状态.被动收益.园丁.现有数>0" style="display: flex;flex-direction: row;align-items: center">
+          <el-button style="background:rgba(51,11,11,0.75)" type="info" @click="展示提升效率对话=true">提升效率
+          </el-button>
+        </div>
+
+        <!--      统一全球平菇市场-->
+        <div v-if="状态.最高总数>500">
+          <el-button style="background:rgba(51,11,11,0.75)" type="info" @click="展示统一市场对话=true">统一平菇市场
+          </el-button>
+        </div>
+
+        <!--      通关！-->
+        <div v-if="状态.最高总数>1000">
+          <el-button style="background:rgba(51,11,11,0.75)" type="info" @click="展示建立平菇文明对话=true">
+            建立平菇文明！
+          </el-button>
+        </div>
+
+
+      </div>
     </div>
-
-    <!--    底部按钮-->
-    <div style="display: flex;justify-content: space-around;background-image: url('/主页/主页标题背景.jpg')">
-      <!--      提升种植效率-->
-      <div v-if="状态.被动收益.园丁.现有数>0" style="display: flex;flex-direction: row;align-items: center">
-        <el-button style="background:rgba(51,11,11,0.75)" type="info" @click="展示提升效率对话=true">提升效率
-        </el-button>
-      </div>
-
-      <!--      统一全球平菇市场-->
-      <div v-if="状态.最高总数>500">
-        <el-button style="background:rgba(51,11,11,0.75)" type="info" @click="展示统一市场对话=true">统一全球平菇市场
-        </el-button>
-      </div>
-
-      <!--      通关！-->
-      <div v-if="状态.最高总数>1000">
-        <el-button style="background:rgba(51,11,11,0.75)" type="info" @click="展示建立平菇文明对话=true">
-          建立平菇文明！
-        </el-button>
-      </div>
-
-
-    </div>
+<!--    <div>右侧空白</div>-->
   </div>
 
   <!-- 购买器材的对话 -->
   <el-dialog
       v-model="展示器材对话"
-      width="95%"
+      width="300"
   >
     <template #header>
       <div style="display: flex;flex-direction: row;justify-content: space-between">
@@ -178,7 +184,7 @@
   <!--  提升效率的对话框 -->
   <el-dialog
       v-model="展示提升效率对话"
-      width="95%"
+      width="300"
   >
     <template #header>
       <div style="display: flex;flex-direction: row;justify-content: space-between">
@@ -218,7 +224,7 @@
   <!--  统一市场的 对话框-->
   <el-dialog
       v-model="展示统一市场对话"
-      width="95%"
+      width="300"
   >
     <template #header>
       <div style="display: flex;flex-direction: row;justify-content: space-between">
@@ -265,7 +271,7 @@
   <!--  建立平菇文明的对话框-->
   <el-dialog
       v-model="展示建立平菇文明对话"
-      width="95%"
+      width="300"
   >
     <template #header>
       <div style="display: flex;flex-direction: row;justify-content: space-between">
@@ -322,31 +328,38 @@ import {onMounted} from "vue";
 import vhCheck from "vh-check";
 import anime from "animejs";
 
+// region全局配置
+const 是否保存状态 = false//在用户端保存状态, 如果为是,则下次用户登录可以恢复上次的平菇数, 器材等
+
+// endregion
+
 
 onMounted(() => {
-  const 恢复的状态 = JSON.parse(localStorage.getItem("状态"))
+  if (是否保存状态) {
+    const 恢复的状态 = JSON.parse(localStorage.getItem("状态"))
 
-  // 恢复所有非计算属性
-  let 完整恢复的 = ['现有总数', '最高总数', '自己种植', '统一市场', '建立平菇文明']
-  for (let i of 完整恢复的) {
-    状态.value[i] = 恢复的状态[i]
-    // console.log(i)
-  }
-  // for (let i of (状态.value.被动收益,恢复的状态.被动收益)){
-  //   console.log(i)
-  // }
-
-  // 恢复被动收益
-  // let 被动收益恢复的=['现有数','单个效率','单价','描述','购买按钮信息','下次涨价','立绘','背景']
-  let 被动收益恢复的=['现有数','单个效率','单价','描述','购买按钮信息','下次涨价',]
-  Object.entries(状态.value.被动收益).forEach(([key, val]) => {
-    console.log(key, val)
-    for (let i of 被动收益恢复的){
-      // console.log(val[i])
-      val[i] = 恢复的状态.被动收益[key][i]
-      // console.log(恢复的状态.被动收益[key][i])
+    // 恢复所有非计算属性
+    let 完整恢复的 = ['现有总数', '最高总数', '自己种植', '统一市场', '建立平菇文明']
+    for (let i of 完整恢复的) {
+      状态.value[i] = 恢复的状态[i]
+      // console.log(i)
     }
-  })
+    // for (let i of (状态.value.被动收益,恢复的状态.被动收益)){
+    //   console.log(i)
+    // }
+
+    // 恢复被动收益
+    // let 被动收益恢复的=['现有数','单个效率','单价','描述','购买按钮信息','下次涨价','立绘','背景']
+    let 被动收益恢复的 = ['现有数', '单个效率', '单价', '描述', '购买按钮信息', '下次涨价',]
+    Object.entries(状态.value.被动收益).forEach(([key, val]) => {
+      console.log(key, val)
+      for (let i of 被动收益恢复的) {
+        // console.log(val[i])
+        val[i] = 恢复的状态.被动收益[key][i]
+        // console.log(恢复的状态.被动收益[key][i])
+      }
+    })
+  }
 
 })
 vhCheck('browser-address-bar')
@@ -606,9 +619,9 @@ function 建立平菇文明() {
 }
 
 // 测试
-状态.value.现有总数 = 1500
+状态.value.现有总数 = 15000
 Object.entries(状态.value.被动收益).forEach(([key, val]) => {
-  val.现有数 = 5
+  // val.现有数 = 5
 })
 
 
@@ -619,6 +632,9 @@ Object.entries(状态.value.被动收益).forEach(([key, val]) => {
   flex-direction: column;
   height: 100vh;
   height: calc(100vh - var(--browser-address-bar, 0px));
+  max-width: v-bind('100*9/16+"vh"');
+  /*min-width: v-bind('100*9/21+"vh"');*/
+  flex-grow: 1;
 }
 
 
