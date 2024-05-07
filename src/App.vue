@@ -10,8 +10,7 @@
         <div
             style="display: flex;flex-direction: row;justify-content: space-between;background-image: url('/主页/主页标题背景.jpg');  background-size: cover">
           <div style="display: flex;align-items: center">
-<!--            <el-image style="height: 3em" src="/主页/平菇.webp"></el-image>-->
-            <el-image style="height: 3em" src="./主页/平菇.webp"></el-image>
+            <el-image style="height: 3em" src="/主页/平菇.webp"></el-image>
           </div>
           <div style="display: flex;
                     flex-direction: column;

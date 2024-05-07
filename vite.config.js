@@ -23,7 +23,9 @@ export default defineConfig({
     },
     server:{
         host: "0.0.0.0",
-    }
+    },
+//     配置publicPath, 不然打包部署路径不正确
+    publicDir:'/mushroom_yard/'
 
 
 
