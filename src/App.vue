@@ -1,8 +1,8 @@
 <template>
   <div style="display: flex;flex-direction: row;justify-content: center;background-image: url('/主页/平菇.webp')">
-<!--    <div>-->
-<!--      左侧空白-->
-<!--    </div>-->
+    <!--    <div>-->
+    <!--      左侧空白-->
+    <!--    </div>-->
     <div class="主容器">
 
       <!--  标题和平菇图片-->
@@ -105,9 +105,22 @@
 
 
       </div>
+
+      <!--  通关动画的div-->
+      <div style="position:absolute;display: flex;flex-direction: row;justify-content: space-between;width: 100%">
+        <el-image class="通关蘑菇" style="opacity:0;height: 3em;transform:scaleX(-1)" src="/主页/平菇.webp"></el-image>
+        <el-image class="通关蘑菇" style="opacity:0;height: 3em;transform:scaleX(-1)" src="/主页/平菇.webp"></el-image>
+        <el-image class="通关蘑菇" style="opacity:0;height: 3em;transform:scaleX(-1)" src="/主页/平菇.webp"></el-image>
+        <el-image class="通关蘑菇" style="opacity:0;height: 3em;transform:scaleX(-1)" src="/主页/平菇.webp"></el-image>
+        <el-image class="通关蘑菇" style="opacity:0;height: 3em;transform:scaleX(-1)" src="/主页/平菇.webp"></el-image>
+        <el-image class="通关蘑菇" style="opacity:0;height: 3em;transform:scaleX(-1)" src="/主页/平菇.webp"></el-image>
+        <el-image class="通关蘑菇" style="opacity:0;height: 3em;transform:scaleX(-1)" src="/主页/平菇.webp"></el-image>
+
+      </div>
     </div>
-<!--    <div>右侧空白</div>-->
+    <!--    <div>右侧空白</div>-->
   </div>
+
 
   <!-- 购买器材的对话 -->
   <el-dialog
@@ -329,7 +342,7 @@ import vhCheck from "vh-check";
 import anime from "animejs";
 
 // region全局配置
-const 是否保存状态 = false//在用户端保存状态, 如果为是,则下次用户登录可以恢复上次的平菇数, 器材等
+const 是否保存状态 = true//在用户端保存状态, 如果为是,则下次用户登录可以恢复上次的平菇数, 器材等
 
 // endregion
 
@@ -616,10 +629,22 @@ function 建立平菇文明() {
   状态.value.建立平菇文明.是否建立平菇文明 = true
 
   console.log('你已经建立了平菇文明')
+  anime({
+    targets: '.通关蘑菇',
+    // opacity: [0, 1],
+    opacity: [1,1],
+    translateY: [0, window.innerHeight-100],
+    easing: 'linear',
+    duration: 1000,
+    delay: anime.stagger(100),
+    direction: 'alternate',
+    loop: true,
+    // scale:[1,0.8]
+  })
 }
 
 // 测试
-状态.value.现有总数 = 15000
+// 状态.value.现有总数 = 15000
 Object.entries(状态.value.被动收益).forEach(([key, val]) => {
   // val.现有数 = 5
 })
