@@ -342,7 +342,7 @@ import vhCheck from "vh-check";
 import anime from "animejs";
 
 // region全局配置
-const 是否保存状态 = false//在用户端保存状态, 如果为是,则下次用户登录可以恢复上次的平菇数, 器材等
+const 是否保存状态 = true//在用户端保存状态, 如果为是,则下次用户登录可以恢复上次的平菇数, 器材等
 
 // endregion
 let 通关动画 = null
@@ -654,7 +654,7 @@ function 建立平菇文明() {
 
 
 // 测试
-状态.value.现有总数 = 15000
+// 状态.value.现有总数 = 15000
 Object.entries(状态.value.被动收益).forEach(([key, val]) => {
   // val.现有数 = 5
 })
