@@ -342,12 +342,27 @@ import vhCheck from "vh-check";
 import anime from "animejs";
 
 // region全局配置
-const 是否保存状态 = true//在用户端保存状态, 如果为是,则下次用户登录可以恢复上次的平菇数, 器材等
+const 是否保存状态 = false//在用户端保存状态, 如果为是,则下次用户登录可以恢复上次的平菇数, 器材等
 
 // endregion
+let 通关动画 = null
 
 
 onMounted(() => {
+  通关动画=anime({
+  targets: '.通关蘑菇',
+  // opacity: [0, 1],
+  opacity: [1, 1],
+  translateY: [0, window.innerHeight - 100],
+  easing: 'linear',
+  duration: 1000,
+  delay: anime.stagger(100),
+  direction: 'alternate',
+  loop: true,
+  autoplay: false,
+
+  // scale:[1,0.8]
+})
   if (是否保存状态) {
     const 恢复的状态 = JSON.parse(localStorage.getItem("状态"))
 
@@ -372,7 +387,12 @@ onMounted(() => {
         // console.log(恢复的状态.被动收益[key][i])
       }
     })
+    if(状态.value.建立平菇文明.是否建立平菇文明){
+      console.log(1234544)
+      通关动画.play()
+    }
   }
+
 
 })
 vhCheck('browser-address-bar')
@@ -629,22 +649,12 @@ function 建立平菇文明() {
   状态.value.建立平菇文明.是否建立平菇文明 = true
 
   console.log('你已经建立了平菇文明')
-  anime({
-    targets: '.通关蘑菇',
-    // opacity: [0, 1],
-    opacity: [1,1],
-    translateY: [0, window.innerHeight-100],
-    easing: 'linear',
-    duration: 1000,
-    delay: anime.stagger(100),
-    direction: 'alternate',
-    loop: true,
-    // scale:[1,0.8]
-  })
+  通关动画.play()
 }
 
+
 // 测试
-// 状态.value.现有总数 = 15000
+状态.value.现有总数 = 15000
 Object.entries(状态.value.被动收益).forEach(([key, val]) => {
   // val.现有数 = 5
 })
