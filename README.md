@@ -1,29 +1,10 @@
 # mushroom_yard
+> 一起快乐的种植平菇吧~
 
-This template should help get you started developing with Vue 3 in Vite.
+[进入你的平菇大院](https://mushroom-yard.jiangkerman.cc/)，快乐的种平菇吧~
 
-## Recommended IDE Setup
+你可以雇佣各种人物（器材）帮你获取平菇
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+也有一些提高自己种植效率的方法~
 
-## Customize configuration
-
-See [Vite Configuration Reference](https://vitejs.dev/config/).
-
-## Project Setup
-
-```sh
-npm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
-npm run dev
-```
-
-### Compile and Minify for Production
-
-```sh
-npm run build
-```
+enjoy！
