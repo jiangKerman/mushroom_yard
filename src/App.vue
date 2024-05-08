@@ -336,6 +336,7 @@
 <script setup>
 import {ref, reactive, computed, watch} from "vue";
 import {CloseBold, Coin, InfoFilled, Male, Plus, QuestionFilled, Setting, User} from "@element-plus/icons-vue";
+import 'element-plus/es/components/message/style/css' //如果使用 unplugin-element-plus 并且只使用组件 API，你需要手动导入样式。解决按需导入下时ElMessage的css不加载的问题
 import {ElMessage} from "element-plus";
 import {onMounted} from "vue";
 import vhCheck from "vh-check";
