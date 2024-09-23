@@ -106,19 +106,20 @@
 
       </div>
 
-      <!--  通关动画的div-->
-      <div style="position:absolute;display: flex;flex-direction: row;justify-content: space-between;width: 100%">
-        <el-image class="通关蘑菇" style="opacity:0;height: 3em;transform:scaleX(-1)" src="/主页/平菇.webp"></el-image>
-        <el-image class="通关蘑菇" style="opacity:0;height: 3em;transform:scaleX(-1)" src="/主页/平菇.webp"></el-image>
-        <el-image class="通关蘑菇" style="opacity:0;height: 3em;transform:scaleX(-1)" src="/主页/平菇.webp"></el-image>
-        <el-image class="通关蘑菇" style="opacity:0;height: 3em;transform:scaleX(-1)" src="/主页/平菇.webp"></el-image>
-        <el-image class="通关蘑菇" style="opacity:0;height: 3em;transform:scaleX(-1)" src="/主页/平菇.webp"></el-image>
-        <el-image class="通关蘑菇" style="opacity:0;height: 3em;transform:scaleX(-1)" src="/主页/平菇.webp"></el-image>
-        <el-image class="通关蘑菇" style="opacity:0;height: 3em;transform:scaleX(-1)" src="/主页/平菇.webp"></el-image>
-
-      </div>
-    </div>
+        </div>
     <!--    <div>右侧空白</div>-->
+    <!--  通关动画的div-->
+    <div style="position:absolute;display: flex;flex-direction: row;justify-content: space-between;width: 100%">
+      <el-image class="通关蘑菇" style="opacity:0;height: 3em;transform:scaleX(-1)" src="/主页/平菇.webp"></el-image>
+      <el-image class="通关蘑菇" style="opacity:0;height: 3em;transform:scaleX(-1)" src="/主页/平菇.webp"></el-image>
+      <el-image class="通关蘑菇" style="opacity:0;height: 3em;transform:scaleX(-1)" src="/主页/平菇.webp"></el-image>
+      <el-image class="通关蘑菇" style="opacity:0;height: 3em;transform:scaleX(-1)" src="/主页/平菇.webp"></el-image>
+      <el-image class="通关蘑菇" style="opacity:0;height: 3em;transform:scaleX(-1)" src="/主页/平菇.webp"></el-image>
+      <el-image class="通关蘑菇" style="opacity:0;height: 3em;transform:scaleX(-1)" src="/主页/平菇.webp"></el-image>
+      <el-image class="通关蘑菇" style="opacity:0;height: 3em;transform:scaleX(-1)" src="/主页/平菇.webp"></el-image>
+
+    </div>
+
   </div>
 
 

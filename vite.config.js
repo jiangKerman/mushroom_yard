@@ -24,8 +24,7 @@ export default defineConfig({
     server:{
         host: "0.0.0.0",
     },
-//     设置和部署到github page
-//     base:'/mushroom_yard/', // github仓库名称
+    // base:"/mushroom_yard",
 
 
 
